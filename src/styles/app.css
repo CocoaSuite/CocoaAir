@@ -400,6 +400,56 @@ textarea.input {
   color: var(--fg2);
 }
 
+/*
+ * ——— Window controls in the header ———
+ * Installed as a desktop app, the system's minimise, maximise and close buttons are drawn over
+ * the top of the window (on the right on Windows, on the left on macOS). The header becomes the
+ * title bar: it drags the window, leaves room for the buttons, and lines its own tools up with them.
+ * The env() fallbacks only matter outside that mode and match a Windows window.
+ */
+.wco {
+  --tb-x: env(titlebar-area-x, 0px);
+  --tb-w: env(titlebar-area-width, calc(100vw - 138px));
+  --tb-h: env(titlebar-area-height, 33px);
+  /* Space between the content column's edge and the window's edge. */
+  --column-inset: calc((100vw - min(100vw, 680px)) / 2 + 24px);
+}
+.wco .is-desktop .screen {
+  padding-top: 0;
+}
+.wco .is-desktop .identity,
+.wco .is-desktop .subheader {
+  -webkit-app-region: drag;
+  app-region: drag;
+  min-height: calc(var(--tb-h) + 22px);
+  padding-top: 6px;
+  padding-left: max(0px, calc(var(--tb-x) - var(--column-inset) + 8px));
+  padding-right: max(0px, calc(100vw - var(--tb-x) - var(--tb-w) - var(--column-inset) + 8px));
+}
+.wco .is-desktop .identity button,
+.wco .is-desktop .subheader button,
+.wco .is-desktop .identity a,
+.wco .is-desktop .subheader a {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+/* Tools sit on the same line as the window buttons, centred on them. */
+.wco .is-desktop .titlebar-tools {
+  align-self: flex-start;
+  height: var(--tb-h);
+  margin-top: -6px;
+}
+.wco .is-desktop .titlebar-tools .icon-btn {
+  width: 30px;
+  height: 28px;
+}
+.wco .is-desktop .subheader {
+  align-items: flex-start;
+}
+.wco .is-desktop .subheader > .icon-btn {
+  margin-top: 6px;
+}
+
 /* ——— Tabs ——— */
 .tabs {
   display: grid;

@@ -9,6 +9,13 @@ import { render } from 'preact';
 import { Air } from './lib/air';
 import { App } from './ui/App';
 
+// Installed on a desktop, the window's own minimise, maximise and close buttons sit inside
+// CocoaAir's header (Window Controls Overlay) instead of a separate title bar.
+const wco = window.matchMedia('(display-mode: window-controls-overlay)');
+const syncWco = () => document.documentElement.classList.toggle('wco', wco.matches);
+syncWco();
+wco.addEventListener('change', syncWco);
+
 const air = new Air();
 air.start();
 render(<App air={air} />, document.getElementById('app')!);

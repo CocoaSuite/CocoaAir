@@ -83,7 +83,7 @@ function HomeDesktop({ tab, setTab, openSettings, withDevice }: Props) {
             <Pencil size={14} />
           </button>
         </div>
-        <div class="row-6">
+        <div class="row-6 titlebar-tools">
           <NetBadge tab={tab} />
           <ThemeButton />
         </div>

@@ -7,7 +7,7 @@ AirDrop for every device. Send files, photos and text between an iPhone, a Windo
 - **Files of any type and size**, several at a time, with progress, speed, time left and cancel. The receiver accepts or declines first.
 - **Text and pasted images** arrive instantly. Received text copies with one click; received images copy with one click or <kbd>Ctrl</kbd> + <kbd>C</kbd>, drag straight into other apps on desktop, and save or share through the share sheet on iPhone.
 - **Paste to send:** on desktop, <kbd>Ctrl</kbd> + <kbd>V</kbd> anywhere sends whatever is on the clipboard. Drag files onto a device to send them.
-- **Light and dark themes** (dark is CocoaShot's), a compact desktop window and a touch layout for phones. Installable as an app.
+- **Light and dark themes** (dark is CocoaShot's), a compact desktop window and a touch layout for phones. Installable as an app: on Windows (Edge or Chrome) the window's minimise, maximise and close buttons sit inside CocoaAir's own header, which also drags the window.
 
 Files travel directly between the two devices over an encrypted WebRTC connection. The server only introduces the devices; it never sees the files or the text.
 

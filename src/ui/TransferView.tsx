@@ -173,8 +173,10 @@ export function SubHeader({ eyebrow, title, onBack, route }: { eyebrow?: string;
         )}
         <span class="sub-title truncate">{title}</span>
       </div>
-      {!touch && <RouteBadge route={route} />}
-      <ThemeButton size={touch ? 'lg' : 'sm'} />
+      <div class="row-6 titlebar-tools">
+        {!touch && <RouteBadge route={route} />}
+        <ThemeButton size={touch ? 'lg' : 'sm'} />
+      </div>
     </header>
   );
 }
