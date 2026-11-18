@@ -1,0 +1,76 @@
+/*
+ * CocoaAir colours, type and shape. Colours appear in code only as these variables.
+ * Dark is CocoaShot's dark UI; light is CocoaAir's airy blue look.
+ */
+:root {
+  --bg: #121212;
+  --panel: #1a1a1a;
+  --panel2: #252525;
+  --hov: #363636;
+  --line: #303030;
+  --line-strong: #3a3a3a;
+  --fg: #ececec;
+  --fg2: #cfcfcf;
+  --mute: #8f8f8f;
+  --pri: #f2f2f2;
+  --pri-fg: #111111;
+  --accent: #8aa7d9;
+  --accent-strong: #a9c0e6;
+  --accent-bg: #2d3a4d;
+  --accent-bd: #3f5577;
+  --ok: #86c79d;
+  --ok-bg: #1e2e24;
+  --warn: #c9a24a;
+  --bad: #ff8a73;
+  --bad-bd: #5a2e28;
+  --drop-bg: #161616;
+  --drop-bd: #444444;
+  --overlay: rgba(0, 0, 0, 0.62);
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --focus: #ffffff;
+
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --display: 'Space Grotesk', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SF Mono', Consolas, monospace;
+
+  --r-chip: 999px;
+  --r-button: 8px;
+  --r-input: 10px;
+  --r-card: 12px;
+  --r-card-lg: 14px;
+  --dur: 140ms;
+
+  color-scheme: dark;
+}
+
+:root.light {
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel2: #e6eaf1;
+  --hov: #eef1f6;
+  --line: #e3e7ee;
+  --line-strong: #d0d5dd;
+  --fg: #101828;
+  --fg2: #344054;
+  --mute: #5a6474;
+  --pri: #2563eb;
+  --pri-fg: #ffffff;
+  --accent: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-bg: #eaf1fe;
+  --accent-bd: #c9d8f7;
+  --ok: #166534;
+  --ok-bg: #e8f6ee;
+  --warn: #b7791f;
+  --bad: #b42318;
+  --bad-bd: #f1c4c4;
+  --drop-bg: #fafbfd;
+  --drop-bd: #b8c2d3;
+  --overlay: rgba(16, 24, 40, 0.5);
+  --shadow: 0 10px 28px rgba(16, 24, 40, 0.16);
+  --shadow-soft: 0 1px 2px rgba(16, 24, 40, 0.08);
+  --focus: #1d4ed8;
+
+  color-scheme: light;
+}
