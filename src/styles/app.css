@@ -408,14 +408,25 @@ textarea.input {
  * The env() fallbacks only matter outside that mode and match a Windows window.
  */
 .wco {
-  --tb-x: env(titlebar-area-x, 0px);
-  --tb-w: env(titlebar-area-width, calc(100vw - 138px));
-  --tb-h: env(titlebar-area-height, 33px);
+  --tb-x: env(titlebar-area-x, var(--wco-x, 0px));
+  --tb-w: env(titlebar-area-width, var(--wco-w, calc(100vw - 138px)));
+  --tb-h: env(titlebar-area-height, var(--wco-h, 36px));
   /* Space between the content column's edge and the window's edge. */
   --column-inset: calc((100vw - min(100vw, 680px)) / 2 + 24px);
 }
 .wco .is-desktop .screen {
   padding-top: 0;
+}
+/* The rest of an otherwise empty top strip drags the window too. */
+.wco .is-desktop .screen::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: var(--tb-h);
+  -webkit-app-region: drag;
+  app-region: drag;
+  z-index: 0;
+  pointer-events: none;
 }
 .wco .is-desktop .identity,
 .wco .is-desktop .subheader {
@@ -448,6 +459,39 @@ textarea.input {
 }
 .wco .is-desktop .subheader > .icon-btn {
   margin-top: 6px;
+}
+
+/* macOS desktop app: the traffic lights sit top-left, above the header. */
+.mac-app .is-desktop .screen {
+  padding-top: 34px;
+}
+.mac-app .is-desktop .screen::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 30px;
+  -webkit-app-region: drag;
+  app-region: drag;
+  pointer-events: none;
+}
+
+/* ——— Phone link (desktop app) ——— */
+.phone-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px;
+  text-align: left;
+}
+.phone-link .qr {
+  width: 112px;
+  height: 112px;
+}
+.phone-url {
+  font: 500 13px/1.3 var(--mono);
+  color: var(--fg2);
+  user-select: text;
+  word-break: break-all;
 }
 
 /* ——— Tabs ——— */

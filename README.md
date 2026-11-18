@@ -11,6 +11,23 @@ AirDrop for every device. Send files, photos and text between an iPhone, a Windo
 
 Files travel directly between the two devices over an encrypted WebRTC connection. The server only introduces the devices; it never sees the files or the text.
 
+## Desktop app
+
+Windows gets a ready-to-run app, downloadable from the [latest release](https://github.com/CocoaSuite/CocoaAir/releases/latest):
+
+- **CocoaAir-Setup-x.y.z.exe** installs CocoaAir with a Start menu entry and desktop shortcut, and uninstalls cleanly.
+- **CocoaAir-Portable-x.y.z.exe** runs straight away from anywhere, a USB stick included, without installing.
+
+The desktop app needs no server of its own: it runs one inside itself.
+
+1. Open CocoaAir on the PC. The first time, Windows asks whether to let it use the network: allow **Private networks**, so phones on your Wi‑Fi can reach it.
+2. On the phone, scan the QR code under **Add your phone** with the camera (or open the address shown). The phone appears in the list, and the PC on the phone.
+3. Several PCs on the same Wi‑Fi find each other automatically and share one PC's server; if that PC closes, another takes over.
+
+The window is compact, with minimise, maximise and close built into CocoaAir's header. Both downloads are unsigned for now, so Windows SmartScreen may ask once: choose **More info**, then **Run anyway**.
+
+Builds come from GitHub Actions: pushing a tag such as `v1.0.1` (matching `version` in package.json) builds Windows, macOS and Linux and attaches them to a release. Locally: `npm run dist:win` (on Linux this needs Wine).
+
 ## Quick start
 
 ```bash
@@ -65,6 +82,7 @@ Copying images to the clipboard and the share sheet only work on **HTTPS** pages
 | `TURN_URLS` | — | Comma-separated TURN servers, e.g. `turn:turn.example.com:3478,turns:turn.example.com:5349` |
 | `TURN_SECRET` | — | coturn `static-auth-secret`; each device gets credentials that expire after 24 hours |
 | `TURN_USERNAME`, `TURN_CREDENTIAL` | — | Fixed TURN credentials, when no secret is set |
+| `SINGLE_NETWORK` | — | `1` to treat every device as nearby, for a server running inside a home network |
 | `ROOM_TTL_MINUTES` | `10` | How long a room code can be joined |
 | `ROOM_MAX_PEERS` | `8` | Most devices in one room |
 | `MAX_CONNECTIONS_PER_IP` | `32` | Most open connections from one address |
@@ -84,4 +102,6 @@ Without TURN, devices on networks that block direct connections cannot reach eac
 | `npm run dev` / `npm run dev:server` | Web app and server with live reload |
 | `npm run build` | Type-check and build both |
 | `npm test` | Unit tests (network grouping, rooms, relaying, TURN credentials) |
+| `npm run desktop` | Builds and opens the desktop app |
+| `npm run dist:win` / `dist:mac` / `dist:linux` | Builds the desktop installers into `release/` |
 | `npm run test:e2e` | Builds, then runs two browsers (desktop and iPhone-sized) through text, a pasted image, files, rooms and the theme switch |

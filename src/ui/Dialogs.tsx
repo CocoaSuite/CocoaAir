@@ -5,6 +5,7 @@ import { deviceLabel } from '../lib/device';
 import { fileKind, formatBytes } from './actions';
 import { useAir, useApp } from './context';
 import { DeviceIcon, KindIcon } from './icons';
+import { PhoneLink } from './PhoneLink';
 
 function Modal({ label, onClose, children }: { label: string; onClose?: () => void; children: ComponentChildren }) {
   const { touch } = useApp();
@@ -148,6 +149,19 @@ export function ChooseDevice({ title, onPick, onClose }: { title: string; onPick
       </div>
       <button type="button" class="btn" onClick={onClose}>
         Cancel
+      </button>
+    </Modal>
+  );
+}
+
+export function AddPhone({ onClose }: { onClose: () => void }) {
+  return (
+    <Modal label="Add a phone" onClose={onClose}>
+      <h2 class="title">Add a phone</h2>
+      <PhoneLink compact />
+      <span class="muted small">On a different network? Use a room code instead.</span>
+      <button type="button" class="btn" onClick={onClose} data-autofocus>
+        Done
       </button>
     </Modal>
   );

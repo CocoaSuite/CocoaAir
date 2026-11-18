@@ -49,7 +49,7 @@ export async function buildApp(config: Config, opts: { logger?: boolean } = {}):
     const send = (msg: ServerMessage) => {
       if (socket.readyState === socket.OPEN) socket.send(JSON.stringify(msg));
     };
-    const id = hub.connect(networkKey(ip), send);
+    const id = hub.connect(config.singleNetwork ? 'lan' : networkKey(ip), send);
 
     let alive = true;
     const heartbeat = setInterval(() => {

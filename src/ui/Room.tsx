@@ -1,7 +1,7 @@
-import QRCode from 'qrcode';
 import { Fragment } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { ROOM_CODE_LENGTH, formatRoomCode, normalizeRoomCode, type RoomError } from '../../shared/protocol';
+import { desktop } from '../lib/desktop';
 import { deviceLabel } from '../lib/device';
 import { copyText } from './actions';
 import { Dot } from './Common';
@@ -9,6 +9,7 @@ import { useAir, useApp } from './context';
 import { useNow } from './hooks';
 import { Copy, DeviceIcon, Leave, Message } from './icons';
 import { DeviceRow } from './Home';
+import { useQr } from './PhoneLink';
 
 const ERRORS: Record<RoomError, string> = {
   'not-found': 'No room with that code. Check it and try again.',
@@ -73,18 +74,9 @@ function YourRoom() {
   const room = useAir((s) => s.room)!;
   const others = useAir((s) => s.roomPeers.length);
   const now = useNow(15_000);
-  const [qr, setQr] = useState('');
-  const link = `${location.origin}${location.pathname}#join=${room.code}`;
-
-  useEffect(() => {
-    let live = true;
-    QRCode.toString(link, { type: 'svg', margin: 1, errorCorrectionLevel: 'M', color: { dark: '#101828', light: '#ffffff' } })
-      .then((svg) => live && setQr(svg))
-      .catch(() => setQr(''));
-    return () => {
-      live = false;
-    };
-  }, [link]);
+  // In the desktop app the page lives on this PC, so the link uses the address phones can reach.
+  const origin = desktop?.info.phoneUrl?.replace(/\/$/, '') ?? `${location.origin}${location.pathname.replace(/\/$/, '')}`;
+  const qr = useQr(`${origin}/#join=${room.code}`);
 
   const minutes = room.joinUntil ? Math.max(0, Math.ceil((room.joinUntil - now) / 60_000)) : 0;
   const copy = async () => {

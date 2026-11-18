@@ -1,4 +1,5 @@
 import type { PeerInfo, RoomError, RoomInfo, ServerMessage } from '../../shared/protocol';
+import { desktop } from './desktop';
 import { detectDevice } from './device';
 import { PeerLink, type Route } from './link';
 import { Signaling, signalingUrl } from './signaling';
@@ -589,6 +590,7 @@ export class Air {
   }
 
   private notify(peerId: string, what: string): void {
+    if (document.hidden || !document.hasFocus()) desktop?.attention();
     const s = this.store.get();
     if (s.viewing === peerId) return;
     this.store.set({ unread: { ...s.unread, [peerId]: (s.unread[peerId] ?? 0) + 1 } });

@@ -1,3 +1,4 @@
+import { desktop } from './desktop';
 import type { ClientMessage, ServerMessage } from '../../shared/protocol';
 
 type Listener = (msg: ServerMessage) => void;
@@ -96,6 +97,7 @@ export class Signaling {
 }
 
 export function signalingUrl(loc: Location = location): string {
+  if (desktop?.info.signalingUrl) return desktop.info.signalingUrl;
   const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${proto}//${loc.host}/api/ws`;
 }

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { Air } from '../lib/air';
 import { Chat } from './Chat';
 import { AppContext, type Ctx, type View } from './context';
-import { ChooseDevice, Incoming, Settings } from './Dialogs';
+import { AddPhone, ChooseDevice, Incoming, Settings } from './Dialogs';
 import { Home, type Tab } from './Home';
 import { useTouch } from './hooks';
 import { Toasts } from './Toasts';
@@ -13,6 +13,7 @@ export function App({ air }: { air: Air }) {
   const [view, setView] = useState<View>({ name: 'home' });
   const [tab, setTab] = useState<Tab>(() => (location.hash.startsWith('#join=') ? 'room' : 'nearby'));
   const [settings, setSettings] = useState(false);
+  const [phone, setPhone] = useState(false);
   const [chooser, setChooser] = useState<null | { title: string; run: (peerId: string) => void }>(null);
   const filesInput = useRef<HTMLInputElement>(null);
   const mediaInput = useRef<HTMLInputElement>(null);
@@ -121,12 +122,13 @@ export function App({ air }: { air: Air }) {
     <AppContext.Provider value={ctx}>
       <div class={`app ${touch ? 'is-touch' : 'is-desktop'}`}>
         {view.name === 'home' && (
-          <Home tab={tab} setTab={setTab} openSettings={() => setSettings(true)} withDevice={withDevice} />
+          <Home tab={tab} setTab={setTab} openSettings={() => setSettings(true)} openPhone={() => setPhone(true)} withDevice={withDevice} />
         )}
         {view.name === 'chat' && <Chat peerId={view.peerId} />}
         {view.name === 'transfer' && <TransferView id={view.id} />}
         <Incoming />
         {settings && <Settings onClose={() => setSettings(false)} />}
+        {phone && <AddPhone onClose={() => setPhone(false)} />}
         {chooser && (
           <ChooseDevice
             title={chooser.title}

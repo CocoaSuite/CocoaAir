@@ -18,6 +18,11 @@ export interface Config {
   turnCredential: string | null;
   /** Most connections from one address. */
   maxConnectionsPerIp: number;
+  /**
+   * Treat every device as nearby. Used when the server runs on a PC in the home network
+   * (the desktop app): anything that can reach it directly is on the same network.
+   */
+  singleNetwork: boolean;
 }
 
 function list(value: string | undefined): string[] {
@@ -48,5 +53,6 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     turnUsername: env.TURN_USERNAME || null,
     turnCredential: env.TURN_CREDENTIAL || null,
     maxConnectionsPerIp: int(env.MAX_CONNECTIONS_PER_IP, 32),
+    singleNetwork: env.SINGLE_NETWORK === '1' || env.SINGLE_NETWORK === 'true',
   };
 }

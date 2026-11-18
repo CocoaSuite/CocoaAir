@@ -1,3 +1,4 @@
+import { desktop } from '../lib/desktop';
 import { useEffect, useState } from 'preact/hooks';
 
 const THEME_KEY = 'ca-theme';
@@ -26,6 +27,7 @@ export function useTheme(): [Theme, () => void] {
     }
     const meta = document.querySelector('meta[name="theme-color"]');
     meta?.setAttribute('content', next === 'light' ? '#f3f5f9' : '#121212');
+    desktop?.setTheme(next);
     window.dispatchEvent(new Event('air:theme'));
   };
   return [theme, toggle];

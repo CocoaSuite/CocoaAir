@@ -3,3 +3,6 @@ dist
 dist-server
 tests
 .git
+release
+build
+electron

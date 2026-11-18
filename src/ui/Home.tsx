@@ -1,10 +1,12 @@
 import { useState } from 'preact/hooks';
 import type { PeerInfo } from '../../shared/protocol';
 import type { Transfer } from '../lib/air';
+import { desktop } from '../lib/desktop';
 import { deviceLabel } from '../lib/device';
 import { Badge, Logo, ThemeButton } from './Common';
 import { useAir, useApp } from './context';
-import { DeviceIcon, Folder, Globe, Image, Lock, Message, Pencil, Upload, Wifi } from './icons';
+import { DeviceIcon, Folder, Globe, Image, Lock, Message, Pencil, Phone, Upload, Wifi } from './icons';
+import { PhoneLink } from './PhoneLink';
 import { RoomPanel } from './Room';
 
 export type Tab = 'nearby' | 'room';
@@ -13,6 +15,7 @@ interface Props {
   tab: Tab;
   setTab: (t: Tab) => void;
   openSettings: () => void;
+  openPhone: () => void;
   withDevice: (title: string, run: (peerId: string) => void) => void;
 }
 
@@ -54,7 +57,7 @@ function activeFor(transfers: Transfer[], peerId: string): Transfer | undefined 
 
 // ——— Desktop ———
 
-function HomeDesktop({ tab, setTab, openSettings, withDevice }: Props) {
+function HomeDesktop({ tab, setTab, openSettings, openPhone, withDevice }: Props) {
   const { air, pickFiles } = useApp();
   const me = useAir((s) => s.me);
   const peers = useAir((s) => (tab === 'room' ? s.roomPeers : s.nearby));
@@ -85,6 +88,11 @@ function HomeDesktop({ tab, setTab, openSettings, withDevice }: Props) {
         </div>
         <div class="row-6 titlebar-tools">
           <NetBadge tab={tab} />
+          {desktop?.info.phoneUrl && (
+            <button type="button" class="icon-btn ghost" aria-label="Add a phone" title="Add a phone" onClick={openPhone}>
+              <Phone size={16} />
+            </button>
+          )}
           <ThemeButton />
         </div>
       </header>
@@ -194,6 +202,7 @@ function pct(t: Transfer): number {
 
 function EmptyNearby() {
   const { touch } = useApp();
+  if (desktop?.info.phoneUrl && !touch) return <PhoneLink />;
   return (
     <div class="empty">
       <span class="pulse" aria-hidden="true" />
