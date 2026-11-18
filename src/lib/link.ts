@@ -8,6 +8,8 @@ export interface LinkEvents {
 }
 
 const OPEN_TIMEOUT_MS = 20_000;
+/** If the channel hasn't opened by now, try again once, through the TURN relay when there is one. */
+const RETRY_AFTER_MS = 7_000;
 const HIGH_WATER = 4 * 1024 * 1024;
 const LOW_WATER = 1024 * 1024;
 
@@ -27,6 +29,8 @@ export class PeerLink {
   private makingOffer = false;
   private ignoreOffer = false;
   private opened: Promise<void>;
+  private retried = false;
+  private hasTurn: boolean;
 
   constructor(
     readonly peerId: string,
@@ -36,18 +40,22 @@ export class PeerLink {
     private events: LinkEvents,
   ) {
     this.pc = new RTCPeerConnection({ iceServers });
+    this.hasTurn = iceServers.some((s) => [s.urls].flat().some((u) => /^turns?:/.test(u)));
     this.channel = this.pc.createDataChannel('air', { negotiated: true, id: 0, ordered: true });
     this.channel.binaryType = 'arraybuffer';
     this.channel.bufferedAmountLowThreshold = LOW_WATER;
 
     this.opened = new Promise<void>((resolve, reject) => {
       const timer = setTimeout(() => reject(new Error('Could not connect to the device')), OPEN_TIMEOUT_MS);
+      const stall = setTimeout(() => this.retry(), RETRY_AFTER_MS);
       this.channel.addEventListener('open', () => {
         clearTimeout(timer);
+        clearTimeout(stall);
         resolve();
       });
       this.channel.addEventListener('close', () => {
         clearTimeout(timer);
+        clearTimeout(stall);
         reject(new Error('The connection closed'));
       });
     });
@@ -73,9 +81,27 @@ export class PeerLink {
     };
     this.pc.onconnectionstatechange = () => {
       const s = this.pc.connectionState;
+      if (s === 'failed' && this.retry()) return;
       if (s === 'failed' || s === 'closed') this.close();
       if (s === 'connected') void this.detectRoute();
     };
+  }
+
+  /**
+   * One second attempt when the direct path fails or stalls: restart ICE, and with TURN available
+   * use only the relay, which gets through strict routers and mobile networks.
+   * Returns false once the retry has been used up.
+   */
+  private retry(): boolean {
+    if (this.retried || this.closed || this.channel.readyState === 'open') return false;
+    this.retried = true;
+    try {
+      if (this.hasTurn) this.pc.setConfiguration({ ...this.pc.getConfiguration(), iceTransportPolicy: 'relay' });
+      this.pc.restartIce();
+    } catch {
+      return false;
+    }
+    return true;
   }
 
   /** Resolves once the data channel can carry data. */

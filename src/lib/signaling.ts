@@ -24,6 +24,7 @@ export class Signaling {
 
   start(): void {
     this.stopped = false;
+    wakeHosted(this.url);
     this.open();
     document.addEventListener('visibilitychange', this.onVisible);
     window.addEventListener('online', this.onVisible);
@@ -90,7 +91,8 @@ export class Signaling {
       if (this.pinger) clearInterval(this.pinger);
       this.statusListeners.forEach((l) => l(false));
       if (this.stopped) return;
-      const delay = Math.min(10_000, 500 * 2 ** this.retry++);
+      // A hosted server may be waking from sleep; keep knocking often so the page connects soon after.
+      const delay = Math.min(hosted() ? 2_000 : 10_000, 500 * 2 ** this.retry++);
       this.timer = setTimeout(() => this.open(), delay);
     };
   }
@@ -99,8 +101,22 @@ export class Signaling {
 export function signalingUrl(loc: Location = location): string {
   if (desktop?.info.signalingUrl) return desktop.info.signalingUrl;
   // A static build (GitHub Pages) has no server of its own and points at a hosted one.
-  const hosted = import.meta.env.VITE_SIGNALING_URL as string | undefined;
-  if (hosted) return hosted;
+  const url = hosted();
+  if (url) return url;
   const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${proto}//${loc.host}/api/ws`;
+}
+
+function hosted(): string | undefined {
+  return (import.meta.env.VITE_SIGNALING_URL as string | undefined) || undefined;
+}
+
+/**
+ * Free hosts put the server to sleep when idle. A plain HTTP request starts it waking at once,
+ * while the socket is still retrying, so devices can connect sooner.
+ */
+function wakeHosted(socketUrl: string): void {
+  if (!hosted()) return;
+  const health = socketUrl.replace(/^ws/, 'http').replace(/\/api\/ws$/, '/api/health');
+  fetch(health, { mode: 'no-cors', cache: 'no-store' }).catch(() => undefined);
 }
