@@ -45,6 +45,6 @@ render(<App air={air} />, document.getElementById('app')!);
 // Lets the browser offer "Install app" and keeps the shell available offline.
 if ('serviceWorker' in navigator && import.meta.env.PROD && !desktop) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => undefined);
+    navigator.serviceWorker.register('sw.js').catch(() => undefined);
   });
 }

@@ -28,6 +28,10 @@ The window is compact, with minimise, maximise and close built into CocoaAir's h
 
 Builds come from GitHub Actions: pushing a tag such as `v1.0.1` (matching `version` in package.json) builds Windows, macOS and Linux and attaches them to a release. Locally: `npm run dist:win` (on Linux this needs Wine).
 
+## Web version
+
+GitHub Pages hosts the web app at https://cocoasuite.github.io/CocoaAir/, deployed on every push to `main` by `.github/workflows/pages.yml`. Pages only serves static files, so that build connects to the signalling server at `cocoaair.onrender.com` (set by `VITE_SIGNALING_URL`).
+
 ## Quick start
 
 ```bash

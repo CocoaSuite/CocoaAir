@@ -98,6 +98,9 @@ export class Signaling {
 
 export function signalingUrl(loc: Location = location): string {
   if (desktop?.info.signalingUrl) return desktop.info.signalingUrl;
+  // A static build (GitHub Pages) has no server of its own and points at a hosted one.
+  const hosted = import.meta.env.VITE_SIGNALING_URL as string | undefined;
+  if (hosted) return hosted;
   const proto = loc.protocol === 'https:' ? 'wss:' : 'ws:';
   return `${proto}//${loc.host}/api/ws`;
 }
